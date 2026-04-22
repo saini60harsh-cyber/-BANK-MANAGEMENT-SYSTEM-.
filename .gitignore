@@ -1,24 +1,172 @@
-# Compiled class file
-*.class
+import java.util.ArrayList;
+import java.util.Scanner;
 
-# Log file
-*.log
+class Account {
+    int accountNumber;
+    String name;
+    double balance;
 
-# BlueJ files
-*.ctxt
+    Account(int accountNumber, String name, double balance) {
+        this.accountNumber = accountNumber;
+        this.name = name;
+        this.balance = balance;
+    }
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+    void display() {
+        System.out.println("Account Number: " + accountNumber);
+        System.out.println("Name          : " + name);
+        System.out.println("Balance       : " + balance);
+        System.out.println("----------------------------");
+    }
+}
 
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
+public class BankManagementSystem {
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+    static ArrayList<Account> accounts = new ArrayList<>();
+    static Scanner sc = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        int choice;
+
+        do {
+            System.out.println("\n===== Bank Management System =====");
+            System.out.println("1. Create Account");
+            System.out.println("2. View All Accounts");
+            System.out.println("3. Deposit Money");
+            System.out.println("4. Withdraw Money");
+            System.out.println("5. Search Account");
+            System.out.println("6. Delete Account");
+            System.out.println("7. Exit");
+            System.out.print("Enter your choice: ");
+
+            choice = sc.nextInt();
+            sc.nextLine();
+
+            switch (choice) {
+                case 1:
+                    createAccount();
+                    break;
+                case 2:
+                    viewAccounts();
+                    break;
+                case 3:
+                    depositMoney();
+                    break;
+                case 4:
+                    withdrawMoney();
+                    break;
+                case 5:
+                    searchAccount();
+                    break;
+                case 6:
+                    deleteAccount();
+                    break;
+                case 7:
+                    System.out.println("Thank you for using Bank System.");
+                    break;
+                default:
+                    System.out.println("Invalid Choice!");
+            }
+
+        } while (choice != 7);
+    }
+
+    static void createAccount() {
+        System.out.print("Enter Account Number: ");
+        int accNo = sc.nextInt();
+        sc.nextLine();
+
+        System.out.print("Enter Account Holder Name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Enter Initial Balance: ");
+        double balance = sc.nextDouble();
+        sc.nextLine();
+
+        accounts.add(new Account(accNo, name, balance));
+        System.out.println("Account Created Successfully!");
+    }
+
+    static void viewAccounts() {
+        if (accounts.isEmpty()) {
+            System.out.println("No accounts found.");
+            return;
+        }
+
+        for (Account acc : accounts) {
+            acc.display();
+        }
+    }
+
+    static void depositMoney() {
+        System.out.print("Enter Account Number: ");
+        int accNo = sc.nextInt();
+        sc.nextLine();
+
+        for (Account acc : accounts) {
+            if (acc.accountNumber == accNo) {
+                System.out.print("Enter Amount to Deposit: ");
+                double amount = sc.nextDouble();
+                acc.balance += amount;
+                System.out.println("Amount Deposited Successfully!");
+                return;
+            }
+        }
+
+        System.out.println("Account Not Found!");
+    }
+
+    static void withdrawMoney() {
+        System.out.print("Enter Account Number: ");
+        int accNo = sc.nextInt();
+        sc.nextLine();
+
+        for (Account acc : accounts) {
+            if (acc.accountNumber == accNo) {
+                System.out.print("Enter Amount to Withdraw: ");
+                double amount = sc.nextDouble();
+
+                if (acc.balance >= amount) {
+                    acc.balance -= amount;
+                    System.out.println("Withdrawal Successful!");
+                } else {
+                    System.out.println("Insufficient Balance!");
+                }
+                return;
+            }
+        }
+
+        System.out.println("Account Not Found!");
+    }
+
+    static void searchAccount() {
+        System.out.print("Enter Account Number to Search: ");
+        int accNo = sc.nextInt();
+        sc.nextLine();
+
+        for (Account acc : accounts) {
+            if (acc.accountNumber == accNo) {
+                acc.display();
+                return;
+            }
+        }
+
+        System.out.println("Account Not Found!");
+    }
+
+    static void deleteAccount() {
+        System.out.print("Enter Account Number to Delete: ");
+        int accNo = sc.nextInt();
+        sc.nextLine();
+
+        for (int i = 0; i < accounts.size(); i++) {
+            if (accounts.get(i).accountNumber == accNo) {
+                accounts.remove(i);
+                System.out.println("Account Deleted Successfully!");
+                return;
+            }
+        }
+
+        System.out.println("Account Not Found!");
+    }
+}
